@@ -31,7 +31,9 @@ export const printOnLive = async (client: Client, oldPresence: Presence, presenc
             const activity = activities?.find((activity) => activity.type === ActivityType.Streaming);
 
             if (activity) {
-                goneLiveMessages[user.id] = await textChannel.send(`${user.toString()} is now live!\n\n${activity?.details}\n**in** ${activity?.state}\n**at** ${activity?.url}`);
+                goneLiveMessages[user.id] = await textChannel.send(
+                    `${user.toString()} is now live! <t:${Math.round(new Date().getTime() / 1000)}>\n\n${activity?.details}\n**in** ${activity?.state}\n**at** ${activity?.url}`
+                );
                 console.log(`${user.tag} is now live in ${activity?.state}`);
             }
         }
@@ -39,7 +41,7 @@ export const printOnLive = async (client: Client, oldPresence: Presence, presenc
         // If the user stopped streaming, update the message in the text channel.
         if (!isStreaming && wasStreaming) {
             if (goneLiveMessages[user.id]) {
-                goneLiveMessages[user.id].edit(goneLiveMessages[user.id].content + " -- **Stream has ended**");
+                goneLiveMessages[user.id].edit(goneLiveMessages[user.id].content + `\n\n**Stream has ended at <t:${Math.round(new Date().getTime() / 1000)}>**`);
             }
         }
     } catch (error) {
