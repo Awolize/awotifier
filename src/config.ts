@@ -1,0 +1,4 @@
+// config.ts
+export const GUILD_ID = "386436101058854913";
+// export const TEXT_CHANNEL_ID = "829794495528697906";
+export const TEXT_CHANNEL_ID = "589565045097103380";
