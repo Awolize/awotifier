@@ -17,6 +17,11 @@ export const printOnLive = async (client: Client, oldPresence: Presence, presenc
         const { user, guild, activities } = presence;
         const textChannel = client.channels.cache.get(TEXT_CHANNEL_ID) as TextChannel;
 
+        if (!user || !guild) {
+            console.log("no user or guild?", user, guild);
+            
+            return;}
+
         // only run once no matter the server, The Cave
         if (guild.id !== GUILD_ID) {
             return;
@@ -40,8 +45,9 @@ export const printOnLive = async (client: Client, oldPresence: Presence, presenc
 
         // If the user stopped streaming, update the message in the text channel.
         if (!isStreaming && wasStreaming) {
-            if (goneLiveMessages[user.id]) {
-                goneLiveMessages[user.id].edit(goneLiveMessages[user.id].content + `\n\n**Stream has ended at <t:${Math.round(new Date().getTime() / 1000)}>**`);
+            const message = goneLiveMessages[user.id]
+            if (message) {
+                message.edit(message.content + `\n\n**Stream ended at <t:${Math.round(new Date().getTime() / 1000)}>**`);
             }
         }
     } catch (error) {

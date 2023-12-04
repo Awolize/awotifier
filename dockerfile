@@ -1,17 +1,22 @@
-FROM node:18-alpine as base
+FROM node:20-alpine as base
 
-WORKDIR /src
-COPY package*.json /
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+
+WORKDIR /app
+COPY package.json pnpm-lock.yaml ./
 EXPOSE 3000
 
 FROM base as production
-ENV NODE_ENV=production
-RUN npm build
-COPY . /
-CMD ["npm", "run", "start"]
+ENV NODE_ENV=development
+RUN pnpm install 
+COPY . .
+RUN pnpm run build
+CMD ["pnpm", "run", "start"]
 
 FROM base as dev
 ENV NODE_ENV=development
-RUN npm install
-COPY . /
-CMD ["npm", "run", "dev"]
+RUN pnpm run install
+COPY . .
+CMD ["pnpm", "run", "dev"]
